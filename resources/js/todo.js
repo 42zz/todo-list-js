@@ -15,13 +15,24 @@ renderTodoList();
 document.getElementById('add').addEventListener('click', function() {
     var value = document.getElementById('item').value;
     if(value) {
-        addItemTodo(value);
-        document.getElementById('item').value = '';
-
-        data.todo.push(value);
-        dataObjectUpdated();
+        addItem(value);
     }
 });
+
+document.getElementById('item').addEventListener('keydown', function(e) {
+    var value = this.value;
+    if(e.code === 'Enter' && value) {
+        addItem(value);
+    }
+});
+
+function addItem (value) {
+    addItemToDOM(value);
+    document.getElementById('item').value = '';
+
+    data.todo.push(value);
+    dataObjectUpdated();
+}
 
 function dataObjectUpdated() {
     localStorage.setItem('todoList', JSON.stringify(data));
@@ -32,12 +43,12 @@ function renderTodoList() {
 
     for(var i = 0; i < data.todo.length; i++) {
         var value = data.todo[i];
-        addItemTodo(value);
+        addItemToDOM(value);
     }
 
     for(var j = 0; j < data.completed.length; j++) {
         var value = data.completed[j];
-        addItemTodo(value, true);
+        addItemToDOM(value, true);
     }
 }
 
@@ -82,7 +93,7 @@ function completeItem() {
 }
 
 // Adds a new item to the todo list
-function addItemTodo(text, completed) {
+function addItemToDOM(text, completed) {
     var list = (completed) ? document.getElementById('completed') : document.getElementById('todo');
 
     var item = document.createElement('li');
